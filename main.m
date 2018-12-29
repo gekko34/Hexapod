@@ -15,8 +15,8 @@ clf;
 clc;
 
 % global parameters
-global MaxActuatorLength = 860;
-global MinActuatorLength = 660;
+global MaxActuatorLength = 900;
+global MinActuatorLength = 600;
 
 % highlighted pole
 poleNr = 5; 
@@ -75,12 +75,21 @@ figure(2);
 % roll, pitch, yaw -> degree
 % surge, sway, heave -> mm
 
+%{
 for i = -3:1:3;
 %  V = [ 0, 0, 0, 0, 0, i/3*105, 0, 0, 0 ]; % heave
 %  V = [ 0, 0, 0, 0, i/3*105, 0, 0, 0, 0 ]; % sway
   V = [ i/3*30, 0, 0, 0, 0, 0, 0, 0, 0 ]; % roll
+%}
+  
+  
+% load motion file "q"
+load motion_profile.mat
 
-
+% run motion profile
+for i = 1:int32(size(q,1)/50):size(q,1)  
+  V = q(i,:); 
+ 
 % copy platform
 % move axis 
   pod2.BF = pod.BF;
@@ -103,20 +112,18 @@ for i = -3:1:3;
 % "blue" = OK
 % "red" = NOK (error, pole/actuator length out of range)
 
-X = [ pod2.J_TF(poleNr,1), pod2.J_TF(poleNr,2), pod2.J_TF(poleNr,3);
-      pod2.TF(poleNr,1),   pod2.TF(poleNr,2),   pod2.TF(poleNr,3);
-      pod2.BF(poleNr,1),   pod2.BF(poleNr,2),   pod2.BF(poleNr,3);
-      pod2.J_BF(poleNr,1), pod2.J_BF(poleNr,2), pod2.J_BF(poleNr,3) ];
+%X = [ pod2.J_TF(poleNr,1), pod2.J_TF(poleNr,2), pod2.J_TF(poleNr,3);
+%      pod2.TF(poleNr,1),   pod2.TF(poleNr,2),   pod2.TF(poleNr,3);
+%      pod2.BF(poleNr,1),   pod2.BF(poleNr,2),   pod2.BF(poleNr,3);
+%      pod2.J_BF(poleNr,1), pod2.J_BF(poleNr,2), pod2.J_BF(poleNr,3) ];
          
   if( LengthErr )
     show_hexapod(pod2.TF, pod2.BF, pod2.J_TF, pod2.J_BF, pod2.TT, "red");
-    plot3(X(:,1), X(:,2), X(:,3),'LineWidth',3,'Color',"red");
+%    plot3(X(:,1), X(:,2), X(:,3),'LineWidth',3,'Color',"red");
   else
     show_hexapod(pod2.TF, pod2.BF, pod2.J_TF, pod2.J_BF, pod2.TT, "blue");
-    plot3(X(:,1), X(:,2), X(:,3),'LineWidth',3,'Color',"blue"); 
+%    plot3(X(:,1), X(:,2), X(:,3),'LineWidth',3,'Color',"blue"); 
   end  
-  
-  axis([-600, 600, -600, 600, -800, 600])
 
 end
 

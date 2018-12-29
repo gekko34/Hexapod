@@ -11,7 +11,7 @@
 function show_hexapod(T, B, C, D, H, PoleColor) 
 % shows the hexapod platform in 3D  
 
-  %hold off;
+  hold off;
   plot3(B(:,1), B(:,2), B(:,3), 'color', "black"); % plot base frame
   hold on;
   plot3(T(:,1), T(:,2), T(:,3), 'color', "black"); % plot top frame
@@ -26,6 +26,8 @@ function show_hexapod(T, B, C, D, H, PoleColor)
   endfor
      
   %axis tight;
-  %refresh(); 
+  axis([-700, 700, -700, 700, -700, 700])
+  refresh(); 
+
 
 end
